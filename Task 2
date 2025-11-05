@@ -1,0 +1,80 @@
+Step 2: Type “connect”
+ 
+Step 3: Enter Username: system and Password: system Step 4: Start typing the commands
+The SQL commands to create, insert, select, and display a table for an online food ordering system
+1. Create Tables 
+a) Customers Table:
+CREATE TABLE Customers ( CustomerID INT PRIMARY KEY, Name VARCHAR(100),
+
+Email VARCHAR(100),
+PhoneNumber VARCHAR(15), Address VARCHAR(255)
+);
+b) FoodItems Table:
+CREATE TABLE FoodItems ( FoodID INT PRIMARY KEY, FoodName VARCHAR(100), Price DECIMAL(10, 2),
+Category VARCHAR(50)
+);
+This is the sample how your commands are executed
+
+c) Orders Table:
+CREATE TABLE Orders ( OrderID INT PRIMARY KEY,
+CustomerID INT, OrderDate DATE,
+TotalAmount DECIMAL(10, 2),
+FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+d) OrderDetails Table:
+CREATE TABLE OrderDetails (
+
+OrderDetailID INT PRIMARY KEY, OrderID INT,
+FoodID INT, Quantity INT,
+Subtotal DECIMAL(10, 2),
+FOREIGN KEY (OrderID) REFERENCES Orders(OrderID), FOREIGN KEY (FoodID) REFERENCES FoodItems(FoodID)
+);
+2. Insert Records
+ 
+a) Insert into Customers Table
+ 
+INSERT
+INTO Customers (CustomerID, Name, Email, PhoneNumber, Address) VALUES (1, 'John Doe', 'john.doe@example.com', '1234567890', '123 Elm
+Street');
+INSERT INTO Customers (CustomerID, Name, Email, PhoneNumber, Address) VALUES (2, 'Jane Smith', 'jane.smith@example.com', '9876543210', '456
+Oak Avenue');
+SELECT * FROM Customers;
+ 
+b) Insert into FoodItems Table
+ 
+INSERT
+INTO FoodItems (FoodID, FoodName, Price, Category) VALUES (1, 'Cheese Pizza', 8.99, 'Pizza');
+INSERT
+INTO FoodItems (FoodID, FoodName, Price, Category) VALUES (2, 'Chicken Burger', 5.49, 'Burger');
+INSERT
+INTO FoodItems (FoodID, FoodName, Price, Category) VALUES (3, 'Veggie Salad', 4.99, 'Salad');
+INSERT
+INTO FoodItems (FoodID, FoodName, Price, Category) VALUES (4, 'Chocolate Cake', 3.99, 'Dessert');
+SELECT * FROM FoodItems;
+
+
+c) Insert into Orders Table
+ 
+INSERT
+INTO Orders (OrderID, CustomerID, OrderDate, TotalAmount) VALUES (1 Orders, 1, DATE '2025-01-03', 18.47);
+INSERT
+INTO Orders (OrderID, CustomerID, OrderDate, TotalAmount) VALUES (2, 2, DATE '2025-01-03', 9.48);
+SELECT * FROM Orders;
+ 
+d) Insert into OrderDetails Table
+ 
+INSERT INTO OrderDetails (OrderDetailID, OrderID, FoodID, Quantity, Subtotal) VALUES (1, 1, 1, 2, 17.98);
+INSERT INTO OrderDetails (OrderDetailID, OrderID, FoodID, Quantity, Subtotal) VALUES (2, 1, 4, 1, 3.99);
+INSERT  INTO OrderDetails (OrderDetailID, OrderID, FoodID, Quantity, Subtotal) VALUES (3, 2, 2, 1, 5.49);
+INSERT INTO OrderDetails (OrderDetailID, OrderID, FoodID, Quantity, Subtotal) VALUES (4, 2, 3, 1, 4.99);
+SELECT * FROM OrderDetails;
+ 
+3. Select Data
+a) Select All Customers:
+SELECT * FROM Customers;
+b) Select All Food Items:
+SELECT * FROM FoodItems;
+c) Select All Orders:
+SELECT * FROM Orders;
+d) Select All Order Details:
+SELECT * FROM OrderDetails;
