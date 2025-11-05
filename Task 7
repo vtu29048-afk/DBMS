@@ -1,0 +1,13 @@
+riggers, Views, and Exceptions
+Objective:
+To understand and implement Triggers, Views, and Exception Handling for performing and
+managing CRUD (Create, Read, Update, Delete) operations in an Oracle database.
+Part 1: Implementing Triggers
+1. Prevent Insertion of Underage Students
+2. Create a Log Table
+Part 2: Creating Views
+1. View for Top Students
+2. View for Department Summary
+Part 3: Exception Handling
+1. Stored Procedure with Exception Handling for Inserting Student Records
+2. Function to Fetch Student Details with Error Handling
