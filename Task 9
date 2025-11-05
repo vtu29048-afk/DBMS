@@ -1,0 +1,143 @@
+Backing up and recovery in databases                                     ​           CO4, K3
+Perform following backup and recovery scenarios.
+a) Recovering a NOARCHIVELOG Database with Incremental Backups
+b) Restoring the Server Parameter File
+c) Performing Recovery with a Backup Control File
+AIM:
+To devise, implement, and manage a backup and recovery strategy.  
+PROCEDURE:
+ 
+Typically, backup administration tasks include the following:
+• Planning and testing responses to different kinds of failures
+• Configuring the database environment for backup and recovery
+• Setting up a backup schedule
+• Monitoring the backup and recovery environment • Troubleshooting backup problems
+• Recovering from data loss if the need arises
+ 
+Data archival,
+IT is although related to data protection, serves a different purpose. An archival backup is exempted from the normal backup and recovery strategy. These backups are typically archived onto separate storage media and retained for long periods.
+RMAN provides a convenient way to create a backup and exempt it from your backup retention policy. This type of backup is known as an archival backup.
+ 
+•Recovery Manager (RMAN)
+Recovery Manager is fully integrated with the Oracle Database to perform a range of backup and recovery activities, including maintaining an RMAN repository of historical data about backups. You can access RMAN through the command line or through Oracle Enterprise Manager.
+The following solutions are available when implementing a backup and recovery strategy:
+A)To recover a NOARCHIVELOG database with incremental backups:
+1. After connecting to the target database and the recovery catalog, place the database in a mounted state:
+STARTUP FORCE MOUNT
+2. Restore and recover the database.
+For example, you can perform incomplete recovery with the following commands:
+RESTORE DATABASE
+ FROM TAG "consistent_whole_backup";
+RECOVER DATABASE NOREDO;
+RESETLOGS
+3. Open the database with the For example, enter the following command:
+ALTER DATABASE OPEN RESETLOGS;
+ 
+B)To restore the server parameter file from autobackup:
+1. Start RMAN and do one of the following:
+• If the database instance is started at the time of the loss of the server
+parameter file, then connect to the target database.
+• If the database instance is not started when the server parameter file is lost,
+and if you are not using a recovery catalog, then run the
+SET DBID
+ 
+2. Shut down the database instance and restart it without mounting the database.
+When the server parameter file is not available, RMAN starts the instance with a
+dummy parameter file. For example, enter the following command:
+STARTUP FORCE NOMOUNT;
+3. Execute a
+RUN
+command to restore the server parameter file.
+Depending on the situation, you may need to execute multiple commands in the
+RUN
+command. Note the following considerations:
+• If restoring from tape, then use
+ALLOCATE CHANNEL
+to allocate an SBT channel manually. If restoring from disk, then RMAN uses the default disk channel.
+• If the autobackups were not produced with the default format (
+the
+SET CONTROLFILE AUTOBACKUP FOR DEVICE TYPE
+%F
+), then use
+command to specify the
+format in effect when the autobackup was performed.
+• If the most recent autobackup was not created today, then use
+specify the date from which to start the search.
+• If RMAN is not connected to a recovery catalog, then use
+DBID for the target database.
+SET UNTIL
+SET DBID
+ 
+4.You can use the following RMAN command to restart the instance with the restored server parameter file: STARTUP FORCE PFILE=/tmp/init.ora;
+
+C)To recover the database with a control file autobackup in NOCATALOG mode:
+
+1. Start RMAN and connect to a target database, as described in "Making Database
+
+Connections with RMAN".
+
+2. Start the target database instance without mounting the database. For example:
+
+STARTUP NOMOUNT;
+
+3. Set the database identifier for the target database with the
+
+SET DBID
+
+command.
+
+RMAN displays the DBID whenever you connect to a target database.
+
+4. Write an RMAN command file to restore the autobackup control file and perform
+
+recovery.
+
+The command file contains the following steps:
+
+a. Optionally, specify the most recent backup time stamp that RMAN can use
+
+when searching for a control file autobackup to restore.
+
+b. If you know that a different control file autobackup format was in effect when
+
+the control file autobackup was created, then specify a nondefault format for
+
+the restore of the control file.
+
+c. If an SBT channel created the control file autobackup, then allocate one or
+
+more SBT channels. Because no recovery catalog is available, you cannot use
+
+preconfigured channels.
+
+d. Restore the autobackup of the control file, optionally setting the maximum
+
+number of days backward that RMAN can search and the initial sequence
+
+number that it uses in its search for the first day.
+
+e. If you know that the control file contains information about configured channels
+
+that is useful to you in the rest of the restore process, then you can exit RMAN
+
+to clear manually allocated channels from
+
+f.This step depends on whether the online redo logs are available. The option 
+
+OPEN RESETLOGS
+
+is always required after recovery with a backup control file,regardless of whether logs are available.
+
+If the online redo logs are usable, then RMAN can find and apply these logs.
+
+Perform a complete restore and recovery as described in "Performing
+
+Complete Database Recovery".
+
+If the online redo logs are unusable, then perform DBPITR as described in
+
+"Performing Database Point-in-Time Recovery". An
+
+UNTILclause is required to specify a target time, SCN, or log sequence number for the recovery before the first SCN of the online redo logs .
+
+5.If recovery was successful, then open the database and reset the online logs: ALTER DATABASE OPEN RESETLOGS
